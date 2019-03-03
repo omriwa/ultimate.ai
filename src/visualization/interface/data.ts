@@ -4,4 +4,5 @@ export interface IData {
     botOnly: number;
     botAgent: number;
     agentOnly: number;
+    comment?: string;
 }
