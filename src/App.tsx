@@ -32,27 +32,31 @@ class App extends React.Component<{}, IAppState> {
                 agentOnly: entry.agent_only
             }
         });
+        console.log("data", data)
         this.setState({
             ...this.state,
             data
         },
             () => {
                 this.chart = new Chart(
-                    { 
-                        svgId: "chart" 
+                    {
+                        svgId: "#chart"
                     },
                     this.state.data
                 );
+                this.chart.init();
             }
         );
     }
 
   public render() {
-    return (
-        <div className="App">
-            <svg id="chart"/>
-      </div>
-    );
+      return <svg
+          style={{
+              width: "100%",
+              height: "75vh"
+          }}
+          id="chart"
+      />;
   }
 }
 
