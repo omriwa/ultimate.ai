@@ -112,8 +112,8 @@ export class Chart {
             .data(this.data)
             .enter()
             .append("circle")
-            .on("mouseover", this.onCircleEnter)
-            .on("mouseout", this.onCircleLeave)
+            .on("mouseover", this.onCircleEnter.bind(this))
+            .on("mouseout", this.onCircleLeave.bind(this))
             .attr("class", "circle")
             .attr("cx", d => xScale(d.date))
             .attr("cy", d => yScale(d.total))
@@ -124,20 +124,68 @@ export class Chart {
             .attr("fill", "#FFBC42")
             .attr("stroke-width", "1px")
             .attr("stroke", "black")
-            
-
-
     }
 
-    private onCircleEnter(): void {
-        console.log("enter");
+    private onCircleEnter(data: IData): void {
+        const event = d3.event;
+        console.log("e",d3.event)
+        // create svg for description
+        d3.select("body")
+            .append("svg")
+            .attr("id", "description")
+            .style("width", 500)
+            .style("height", 300)
+            .style("position", "absolute")
+            .style("left", event.screenX)
+            .style("bottom", event.screenY)
+        // create pie
+        this.createPie(data);
+        // create comment
     }
 
     private onCircleLeave(): void {
-        console.log("leave");
+        d3.select("#description")
+            .remove();
     }
 
-    private createExplanation(): void {
+    private createPie(data: IData): void {
+        const pieData = [
+            data.agentOnly,
+            data.botAgent,
+            data.botOnly
+        ].map(val => val / data.total),
+            outerRadius = 80,
+            innerRadius = 10,
+            pie = d3.pie(),
+            arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius),
+            colors = ["#FFDDC1", "red", "#D1D3D4"],
+            texts = ["Agent", "B&A", "Bot"];
+
+        console.log("pieData", pie(pieData))
+
+        const arcs = d3.select("#description")
+            .append("g")
+            .attr("transform","translate(" + 200 + "," + 100  + ")")
+            .attr("class","pie-container")
+            .selectAll(".arc")
+            .data(pie(pieData))
+            .enter()
+            .append("g")
+            .attr("class", "arc")
+
+        arcs.append("path")
+            .attr("fill", (d, i) => colors[i])
+            .attr("d", arc);
+
+        arcs.append("text")
+            .attr("transform", (d, i) => {
+                return "translate(" + arc.centroid(pie(pieData)[i]) + ")";
+            })
+            .text((d, i) => texts[i])
+            
+    }
+
+    private createComment(): void {
 
     }
 
