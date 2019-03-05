@@ -128,7 +128,6 @@ export class Chart {
 
     private onCircleEnter(data: IData): void {
         const event = d3.event;
-        console.log("e",d3.event)
         // create svg for description
         d3.select("body")
             .append("svg")
@@ -141,6 +140,7 @@ export class Chart {
         // create pie
         this.createPie(data);
         // create comment
+        this.createComment(data.comment);
     }
 
     private onCircleLeave(): void {
@@ -160,8 +160,6 @@ export class Chart {
             arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius),
             colors = ["#FFDDC1", "red", "#D1D3D4"],
             texts = ["Agent", "B&A", "Bot"];
-
-        console.log("pieData", pie(pieData))
 
         const arcs = d3.select("#description")
             .append("g")
@@ -185,8 +183,12 @@ export class Chart {
             
     }
 
-    private createComment(): void {
-
+    private createComment(comment: any): void {
+        d3.select("#description")
+            .append("text")
+            .attr("transform", this.translate(50,10))
+            .style("fill", "black")
+            .text("sss"/*comment ? comment : ""*/)
     }
 
     private translate(x: number, y: number): string {
