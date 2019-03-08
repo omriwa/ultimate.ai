@@ -58,7 +58,7 @@ describe("ListItemTest", () => {
         });
 
     it("change comment", () => {
-        var stateComment = "";
+        let stateComment = "";
         const ListItemWrapper = mount(
             <ListItem
                 data={{

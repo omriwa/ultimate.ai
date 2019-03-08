@@ -17,7 +17,8 @@
     "only-arrow-functions": false,
     "no-shadowed-variable": false,
     "member-ordering": false,
-    "comment-format": false
+    "comment-format": false,
+    "jsx-no-lambda":  false
   },
   "jsRules": {
     "object-literal-sort-keys": false
