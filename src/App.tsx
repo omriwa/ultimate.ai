@@ -54,7 +54,11 @@ class App extends React.Component<{}, IAppState> {
     }
 
     private renderList(): any {
-        return <ul>
+        return <React.Fragment>
+            <h3>
+                Data List
+            </h3>
+            <ul>
             {
                 this.state.data.map(itemData =>
                     <ListItem
@@ -64,7 +68,8 @@ class App extends React.Component<{}, IAppState> {
                     />
                 )
             }
-        </ul>
+            </ul>
+        </React.Fragment>
     }
 
     private onChangeComment(id: number, comment: string): void {

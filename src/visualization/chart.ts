@@ -21,7 +21,7 @@ export class Chart {
         // create axis
         this.createAxis();
         // create lines
-        this.createLines();
+        this.createLine();
     }
 
     private createAxis(): void {
@@ -69,7 +69,7 @@ export class Chart {
             )
     }
 
-    private createLines(): void {
+    private createLine(): void {
         const svgBounds = d3.select(this.config.svgId).node().getBoundingClientRect(),
             xScale = d3.scaleTime()
                 .range([svgBounds.width * 0.05, svgBounds.width * 0.9])
@@ -114,6 +114,7 @@ export class Chart {
             .append("circle")
             .on("mouseover", this.onCircleEnter.bind(this))
             .on("mouseout", this.onCircleLeave.bind(this))
+            .on("click", (d) => window.dispatchEvent(new CustomEvent("toggleDesription-" + d.id)))
             .attr("class", "circle")
             .attr("cx", d => xScale(d.date))
             .attr("cy", d => yScale(d.total))
@@ -129,23 +130,23 @@ export class Chart {
     private onCircleEnter(data: IData): void {
         const event = d3.event;
         // create svg for description
-        d3.select("body")
-            .append("svg")
-            .attr("id", "description")
-            .style("width", 500)
-            .style("height", 300)
-            .style("background-color", "ghostwhite")
-            .style("border","1px solid lightgray")
-            .style("position", "absolute")
-            .style("left", event.screenX - 250)
-            .style("bottom", event.screenY)
-            .style("opacity", 0)
-            .style("transition","500ms opacity")
-            .style("opacity", 1)
-        // create pie
-        this.createPie(data);
-        // create comment
-        this.createComment(data.comment);
+        //d3.select("body")
+        //    .append("svg")
+        //    .attr("id", "description")
+        //    .style("width", 500)
+        //    .style("height", 300)
+        //    .style("background-color", "ghostwhite")
+        //    .style("border","1px solid lightgray")
+        //    .style("position", "absolute")
+        //    .style("left", event.screenX - 250)
+        //    .style("bottom", event.screenY)
+        //    .style("opacity", 0)
+        //    .style("transition","500ms opacity")
+        //    .style("opacity", 1)
+        //// create pie
+        //this.createPie(data);
+        //// create comment
+        //this.createComment(data.comment);
     }
 
     private onCircleLeave(): void {

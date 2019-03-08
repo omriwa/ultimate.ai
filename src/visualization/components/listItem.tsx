@@ -16,7 +16,7 @@ interface IListItemState {
 }
 
 export class ListItem extends React.Component<IListItemProps, IListItemState> {
-    constructor(props) {
+    constructor(props: IListItemProps) {
         super(props);
 
         this.state = {
@@ -24,7 +24,12 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
         }
         // binding functions
         this.toggleDescription = this.toggleDescription.bind(this);
-        this.onChange = this.onChange.bind(this);
+        this.onChange = this.onChange.bind(this);  
+    }
+
+    public componentDidMount() {
+        // event listener for interacting from the diagram
+        window.addEventListener("toggleDesription-" + this.props.data.id, this.toggleDescription, false);
     }
 
     private onChange(e: React.ChangeEvent<HTMLTextAreaElement>): void {
@@ -39,10 +44,9 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
     }
 
     public render() {
-        console.log("render")
         const style = {
             show: {
-                height: 150,
+                height: 125,
                 opacity: 1
             },
             hide: {
@@ -55,7 +59,9 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
             };
 
         return <li>
-            <span onClick={this.toggleDescription}>
+            <span
+                onClick={this.toggleDescription}
+            >
                 <Label
                     label="Date:"
                     value={this.props.data.date.toISOString()}

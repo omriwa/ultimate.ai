@@ -16,7 +16,8 @@
     "one-variable-per-declaration": false,
     "only-arrow-functions": false,
     "no-shadowed-variable": false,
-    "member-ordering": false
+    "member-ordering": false,
+    "comment-format": false
   },
   "jsRules": {
     "object-literal-sort-keys": false
