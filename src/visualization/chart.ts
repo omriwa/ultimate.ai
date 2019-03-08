@@ -15,6 +15,8 @@ export class Chart {
     public init(): void {
         // create charts
         this.createCharts();
+        // create label
+        this.createAxisLabels("Total Conversations", "Date");
     }
 
     private createCharts(): void {
@@ -39,7 +41,7 @@ export class Chart {
     private createXAxis(): void {
         const svgBounds = d3.select(this.config.svgId).node().getBoundingClientRect(),
             xScale = d3.scaleTime()
-                .range([svgBounds.width * 0.05, svgBounds.width * 0.9])
+                .range([svgBounds.width * 0.05, svgBounds.width * 0.95])
                 .domain(d3.extent(this.data, d => d.date));
 
         d3.select(this.config.svgId)
@@ -51,13 +53,13 @@ export class Chart {
                     .tickFormat(d3.timeFormat("%Y-%m-%d")
                     )
             )
-            .attr("transform", this.translate(svgBounds.width * -0.05, svgBounds.height * 0.9))
+            .attr("transform", this.translate(svgBounds.width * -0.05, svgBounds.height * 0.85))
     }
 
     private createYAxis(): void {
         const svgBounds = d3.select(this.config.svgId).node().getBoundingClientRect(),
             yScale = d3.scaleLinear()
-                .range([svgBounds.height * 0.9, svgBounds.height * 0.05])
+                .range([svgBounds.height * 0.85, svgBounds.height * 0.05])
                 .domain([0, d3.max(this.data, d => d.total)]);
 
         d3.select(this.config.svgId)
@@ -84,7 +86,8 @@ export class Chart {
                 })
                 .y(d => {
                     return yScale(d.total)
-                });
+                }),
+            circleRadius = 8;
 
 
         const path = d3.select(this.config.svgId)
@@ -121,32 +124,41 @@ export class Chart {
             .transition()
             .delay((d, i) => 2000 / this.data.length * i)
             .duration((d, i) => 2000 / this.data.length * i)
-            .attr("r", 8)
+            .attr("r", circleRadius)
             .attr("fill", "#FFBC42")
             .attr("stroke-width", "1px")
             .attr("stroke", "black")
     }
 
     private onCircleEnter(data: IData): void {
-        const event = d3.event;
+        const event = d3.event,
+            circle = d3.select(d3.event.path[0]),
+            rectHeight = 25,
+            rectWidth = 200;
         // create svg for description
-        //d3.select("body")
-        //    .append("svg")
-        //    .attr("id", "description")
-        //    .style("width", 500)
-        //    .style("height", 300)
-        //    .style("background-color", "ghostwhite")
-        //    .style("border","1px solid lightgray")
-        //    .style("position", "absolute")
-        //    .style("left", event.screenX - 250)
-        //    .style("bottom", event.screenY)
-        //    .style("opacity", 0)
-        //    .style("transition","500ms opacity")
-        //    .style("opacity", 1)
-        //// create pie
-        //this.createPie(data);
-        //// create comment
-        //this.createComment(data.comment);
+        console.log("event", d3.event)
+        const tooltip = d3.select(this.config.svgId)
+            .append("g")
+            .attr("id", "description");
+        // create background
+        tooltip.append("rect")
+            .attr("x", -rectWidth * 0.055)
+            .attr("y", -rectHeight * 0.7)
+            .attr("width", rectWidth)
+            .attr("height", rectHeight)
+            .attr("fill", "black");
+        //create text
+        tooltip.append("text")
+            .attr("fill", "white")
+            .text("click for more information!");
+        // adjust to center
+        tooltip.attr("transform",
+            this.translate(
+                circle.attr("cx") - tooltip.node().getBoundingClientRect().width / 4,
+                circle.attr("cy")
+            )
+        )
+
     }
 
     private onCircleLeave(): void {
@@ -154,47 +166,21 @@ export class Chart {
             .remove();
     }
 
-    private createPie(data: IData): void {
-        const pieData = [
-            data.agentOnly,
-            data.botAgent,
-            data.botOnly
-        ].map(val => val / data.total),
-            outerRadius = 80,
-            innerRadius = 10,
-            pie = d3.pie(),
-            arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius),
-            colors = ["#FFDDC1", "red", "#D1D3D4"],
-            texts = ["Agent", "B&A", "Bot"];
-
-        const arcs = d3.select("#description")
-            .append("g")
-            .attr("transform","translate(" + 200 + "," + 100  + ")")
-            .attr("class","pie-container")
-            .selectAll(".arc")
-            .data(pie(pieData))
-            .enter()
-            .append("g")
-            .attr("class", "arc")
-
-        arcs.append("path")
-            .attr("fill", (d, i) => colors[i])
-            .attr("d", arc);
-
-        arcs.append("text")
-            .attr("transform", (d, i) => {
-                return "translate(" + arc.centroid(pie(pieData)[i]) + ")";
-            })
-            .text((d, i) => texts[i])
-            
-    }
-
-    private createComment(comment: any): void {
-        d3.select("#description")
+    private createAxisLabels(xAxisLabel: string, yAxisLabel: string): void {
+        const diagramContainer = d3.select(this.config.svgId)
+            .select(".chart-container"),
+            diagramContainerBounds: ClientRect = diagramContainer.node()
+                .getBoundingClientRect();
+        // create xAxis label
+        d3.select(this.config.svgId)
             .append("text")
-            .attr("transform", this.translate(50,10))
-            .style("fill", "black")
-            .text("sss"/*comment ? comment : ""*/)
+            .text(xAxisLabel)
+            .attr("transform", diagramContainer.attr("transform"))
+        // create yAxis label
+        d3.select(this.config.svgId)
+            .append("text")
+            .text(yAxisLabel)
+            .attr("transform", this.translate(diagramContainerBounds.left, diagramContainerBounds.bottom + 10))
     }
 
     private translate(x: number, y: number): string {

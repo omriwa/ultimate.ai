@@ -64,7 +64,10 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
             >
                 <Label
                     label="Date:"
-                    value={this.props.data.date.toISOString()}
+                    value={
+                        this.props.data.date.toISOString().slice(0, 10)
+                        
+                    }
                 />
             </span>
 
@@ -110,7 +113,7 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
                             </label>
 
                             <div>
-                            <textarea
+                                <textarea
                                 value={this.props.data.comment}
                                 onChange={this.onChange}
                                 />

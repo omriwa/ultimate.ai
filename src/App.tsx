@@ -5,7 +5,10 @@ import { Chart } from "./visualization/chart";
 import { IData } from "./visualization/interface/data";
 // data
 import botData from "./botData";
+// component
 import { ListItem } from './visualization/components/listItem';
+// style
+import "./style.css";
 
 interface IAppState {
     data: IData[]
@@ -92,14 +95,7 @@ class App extends React.Component<{}, IAppState> {
             }}
         >
 
-            <div
-                style={{
-                    width: "30%",
-                    display: "inline-block",
-                    height: "100%",
-                    overflowY: "scroll"
-                }}
-            >
+            <div id="list-panel">
             {
                 this.renderList()
                 }
