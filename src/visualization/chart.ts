@@ -134,9 +134,14 @@ export class Chart {
             .attr("id", "description")
             .style("width", 500)
             .style("height", 300)
+            .style("background-color", "ghostwhite")
+            .style("border","1px solid lightgray")
             .style("position", "absolute")
-            .style("left", event.screenX)
+            .style("left", event.screenX - 250)
             .style("bottom", event.screenY)
+            .style("opacity", 0)
+            .style("transition","500ms opacity")
+            .style("opacity", 1)
         // create pie
         this.createPie(data);
         // create comment

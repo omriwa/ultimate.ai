@@ -1,4 +1,5 @@
 export interface IData {
+    id: number;
     date: Date;
     total: number;
     botOnly: number;
