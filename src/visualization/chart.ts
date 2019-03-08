@@ -136,7 +136,6 @@ export class Chart {
             rectHeight = 25,
             rectWidth = 200;
         // create svg for description
-        console.log("event", d3.event)
         const tooltip = d3.select(this.config.svgId)
             .append("g")
             .attr("id", "description");

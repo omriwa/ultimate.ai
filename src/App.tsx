@@ -6,7 +6,7 @@ import { IData } from "./visualization/interface/data";
 // data
 import botData from "./botData";
 // component
-import { ListItem } from './visualization/components/listItem';
+import { ListItem } from './components/listItem';
 // style
 import "./style.css";
 
@@ -16,6 +16,7 @@ interface IAppState {
 
 class App extends React.Component<{}, IAppState> {
     private chart: Chart;
+    private listItemContainerRef = React.createRef<HTMLDivElement>();
 
     constructor(props) {
         super(props);
@@ -62,15 +63,15 @@ class App extends React.Component<{}, IAppState> {
                 Data List
             </h3>
             <ul>
-            {
-                this.state.data.map(itemData =>
-                    <ListItem
-                        key={itemData.id}
-                        data={itemData}
-                        onChangeComment={this.onChangeComment}
-                    />
-                )
-            }
+                {
+                    this.state.data.map(itemData =>
+                        <ListItem
+                            key={itemData.id}
+                            data={itemData}
+                            onChangeComment={this.onChangeComment}
+                        />
+                    )
+                }
             </ul>
         </React.Fragment>
     }
@@ -95,9 +96,11 @@ class App extends React.Component<{}, IAppState> {
             }}
         >
 
-            <div id="list-panel">
-            {
-                this.renderList()
+            <div
+                id="list-panel"
+            >
+                {
+                    this.renderList()
                 }
             </div>
 

@@ -1,10 +1,10 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom"
 // interface 
-import { IData } from "../interface/data";
+import { IData } from "../visualization//interface/data";
 import { Label } from './label';
 // animation
 import Transition from "react-transition-group/Transition";
-import { isObject } from 'util';
 
 interface IListItemProps {
     data: IData;
@@ -16,6 +16,8 @@ interface IListItemState {
 }
 
 export class ListItem extends React.Component<IListItemProps, IListItemState> {
+    private ref = React.createRef<HTMLLIElement>();
+
     constructor(props: IListItemProps) {
         super(props);
 
@@ -40,7 +42,13 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
         this.setState({
             ...this.state,
             isOpen: !this.state.isOpen
-        });
+        },
+            () => {
+                if (this.state.isOpen && this.ref.current) {
+                    this.ref.current.scrollIntoView();
+                }
+            }
+        );
     }
 
     public render() {
@@ -58,7 +66,7 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
                 transition: "500ms all"
             };
 
-        return <li>
+        return <li ref={this.ref}>
             <span
                 onClick={this.toggleDescription}
             >
