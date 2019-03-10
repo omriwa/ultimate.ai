@@ -63,7 +63,8 @@ export class ListItem extends React.Component<IListItemProps, IListItemState> {
             }
         },
             defaultStyle = {
-                transition: "500ms all"
+                transition: "500ms all",
+                overflow: "hidden"
             };
 
         return <li ref={this.ref}>
